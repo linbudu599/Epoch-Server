@@ -1,3 +1,5 @@
+import ArticleList from "../model/Article";
+
 const resolvers = {
   Query: {
     hello: () => "Hello world!",

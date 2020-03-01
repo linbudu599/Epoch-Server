@@ -1,15 +1,20 @@
-import Koa, { Context, Next } from "koa";
-import { ApolloServer, gql } from "apollo-server-koa";
+import Koa, { Context } from "koa";
+import { ApolloServer } from "apollo-server-koa";
 import typeDefs from "../schema";
 import resolvers from "../resolver";
+import ArticleListModel from "../model";
+import ArticleListApi from "../model/data-source";
 
 const server = new ApolloServer({
   context: ({ req, res }: Context) => ({}),
   typeDefs,
-  resolvers
+  resolvers,
+  dataSources: () => ({
+    articleList: new ArticleListApi<any>(ArticleListModel)
+  })
 });
 
-// there is no router! just one url with query schema
+// there is no router! just one url with various query schema
 const app = new Koa();
 // koa-mount works as well
 server.applyMiddleware({ app });
