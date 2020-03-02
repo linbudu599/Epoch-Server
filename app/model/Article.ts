@@ -9,6 +9,10 @@ class ArticleList extends Model {
   title!: number;
   content!: string;
   auth!: number;
+
+  static async globalMethod(): Promise<any> {
+    return Promise.resolve("Gotcha!");
+  }
 }
 
 ArticleList.init(
@@ -29,6 +33,9 @@ ArticleList.init(
     title: {
       type: new DataTypes.STRING(64)
     },
+    description: {
+      type: new DataTypes.STRING(64)
+    },
     content: {
       type: new DataTypes.STRING()
     },
@@ -43,6 +50,23 @@ ArticleList.init(
   }
 );
 
-
-
+// fill initial data
+// (async () => {
+//   await ArticleList.sync();
+//   for (let i = 0; i < 10; i++) {
+//     const res = await ArticleList.create(
+//       {
+//         type: "FrontEnd",
+//         tag: "React",
+//         title: "深入React Hooks原理",
+//         description: "Guess",
+//         content: "整挺好！"
+//       },
+//       {
+//         benchmark: true
+//       }
+//     );
+//   }
+//   // console.log(res);
+// })();
 export default ArticleList;

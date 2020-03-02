@@ -22,4 +22,13 @@ const sequelize = new Sequelize("mysql://root:111@localhost:3306/graphqlApi", {
   }
 });
 
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err: any) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
 export default sequelize;
