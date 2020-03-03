@@ -53,6 +53,59 @@ class ArticleListApi<T> extends DataSource {
     // console.log(res);
     return this.reducer(res);
   }
+
+  async createArticle(
+    type: string,
+    title: string,
+    description: string,
+    content: string
+  ) {
+    // @ts-ignore
+    const res = await this.store.create({
+      type,
+      title,
+      description,
+      content
+    });
+    // return this.reducer(res);
+    return {
+      msg: "success",
+      status: 1,
+      createdAt: res.created_at
+    };
+  }
+
+  async deleteArticle(aid: number) {
+    const res = await this.store.destroy({
+      // @ts-ignore
+      where: { aid }
+    });
+    console.log(res);
+    return {
+      msg: "success",
+      status: 1,
+      deletedAt: res.deleted_at
+    };
+  }
+
+  async updateArticle(
+    type: string,
+    title: string,
+    description: string,
+    content: string
+  ) {
+    const res = await this.store.update({
+      type,
+      title,
+      description,
+      content
+    });
+    return {
+      msg: "success",
+      status: 1,
+      updatedAt: res.created_at
+    };
+  }
 }
 
 export default ArticleListApi;

@@ -56,6 +56,23 @@ class UserAPI<T> extends DataSource {
       usersCount: 111
     };
   }
+
+
+  async destroyAccount(account: string, pwd: string) {
+    // @ts-ignore
+    const res = await this.store.destory({
+      account,
+      pwd
+    });
+    // return res;
+    // generate token here?
+    console.log(res);
+    return {
+      status: 0,
+      token: null,
+      usersCount: 111
+    };
+  }
 }
 
 export default UserAPI;

@@ -34,6 +34,51 @@ const resolvers = {
       { dataSources }: any
     ) => {
       return await dataSources.users.register(account, pwd);
+    },
+    // destroyAccount: async (
+    //   _: any,
+    //   { account, pwd }: { [x: string]: string },
+    //   { dataSources }: any
+    // ) => {
+    //   return await dataSources.users.destroyAccount(account, pwd);
+    // },
+    createArticle: async (
+      _: any,
+      { type, title, description, content }: { [x: string]: string },
+      { dataSources }: any
+    ) => {
+      return await dataSources.article.createArticle(
+        type,
+        title,
+        description,
+        content
+      );
+    },
+
+    deleteArticle: async (
+      _: any,
+      { type, title, description, content }: { [x: string]: string },
+      { dataSources }: any
+    ) => {
+      return await dataSources.article.deleteArticle({
+        type,
+        title,
+        description,
+        content
+      });
+    },
+
+    updateArticle: async (
+      _: any,
+      { type, title, description, content }: { [x: string]: string },
+      { dataSources }: any
+    ) => {
+      return await dataSources.article.updateArticle({
+        type,
+        title,
+        description,
+        content
+      });
     }
   }
 };

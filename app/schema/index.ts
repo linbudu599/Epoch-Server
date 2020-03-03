@@ -47,7 +47,10 @@ const typeDefs = gql`
 
   type ArticleStatus {
     msg: String!
-    createdAt: String!
+    status: Int!
+    createdAt: String
+    deletedAt: String
+    updatedAt: String
   }
 
   type RegisterStatus implements AccountStatus {
@@ -60,10 +63,20 @@ const typeDefs = gql`
     register(account: String!, pwd: String!): RegisterStatus!
     destroyAccount: LoginStatus!
     # Mutation On Article Series
-    createdArticle: ArticleStatus!
-    deleteArticle: ArticleStatus!
+    createArticle(
+      type: String
+      title: String
+      description: String
+      content: String
+    ): ArticleStatus!
+    deleteArticle(aid: Int!): ArticleStatus!
     # TODO: toggle article visible
-    updateArticle: ArticleStatus!
+    updateArticle(
+      type: String
+      title: String
+      description: String
+      content: String
+    ): ArticleStatus!
   }
 `;
 
