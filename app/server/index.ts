@@ -2,17 +2,39 @@ import Koa, { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
 import typeDefs from "../schema";
 import resolvers from "../resolver";
-import ArticleListModel from "../model/Article";
-import ArticleListApi from "../model/data-source";
+import ArticleModel from "../model/Article";
+import ArticleAPI from "../datasources/ArticleAPI";
+
+import UserModel from "../model/User";
+import UserAPI from "../datasources/UserAPI";
 
 const server = new ApolloServer({
-  context: ({ req, res }: Context) => ({ user: "linbudu" }),
+  context: async ({ req }: Context) => {
+    // ts-node cannot recongize ?. ????
+    // const token = req.headers.authorization || "";
+    // TODO: should get info from token (jwt)
+    // I need to rethink the authorization
+    const account = "linbudu";
+    const pwd = "budubudu";
+    // Apollo will inject data-sources automatically
+    // @ts-ignore
+    // const user = await store.users.findOne({
+    //   where: {
+    //     account,
+    //     pwd
+    //   }
+    // });
+    // console.log(user);
+    // return { user: { ...user.dataValues } };
+  },
   typeDefs,
   resolvers,
   dataSources: () => ({
     // FIXME: fix type error, maybe by .d.ts
     // @ts-ignore
-    articleList: new ArticleListApi<any>(ArticleListModel)
+    article: new ArticleAPI<any>(ArticleModel),
+    // @ts-ignore
+    users: new UserAPI<any>(UserModel)
   })
 });
 

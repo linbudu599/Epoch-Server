@@ -1,5 +1,5 @@
 import { DataSource } from "apollo-datasource";
-import ArticleList from "./Article";
+import ArticleList from "../model/Article";
 
 class ArticleListApi<T> extends DataSource {
   // TODO: read the docs to get correct type

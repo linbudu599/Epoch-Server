@@ -8,7 +8,19 @@ const typeDefs = gql`
     groups: [Group]
     articleList: [Article!]!
     getArticleByAid(aid: Int!): Article!
+    login(account: String, pwd: String): LoginStatus!
   }
+
+  type LoginStatus implements AccountStatus {
+    status: Int!
+    token: String
+  }
+
+  interface AccountStatus {
+    status: Int!
+    token: String
+  }
+
   type Group {
     id: Int
     title: String
@@ -31,6 +43,27 @@ const typeDefs = gql`
     title: String!
     description: String!
     content: String!
+  }
+
+  type ArticleStatus {
+    msg: String!
+    createdAt: String!
+  }
+
+  type RegisterStatus implements AccountStatus {
+    status: Int!
+    token: String
+    usersCount: Int!
+  }
+
+  type Mutation {
+    register(account: String!, pwd: String!): RegisterStatus!
+    destroyAccount: LoginStatus!
+    # Mutation On Article Series
+    createdArticle: ArticleStatus!
+    deleteArticle: ArticleStatus!
+    # TODO: toggle article visible
+    updateArticle: ArticleStatus!
   }
 `;
 
