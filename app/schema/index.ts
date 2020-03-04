@@ -6,7 +6,9 @@ const typeDefs = gql`
   type Query {
     hello: String!
     groups: [Group]
-    articleList: [Article!]!
+    # eg: fe fetch data like {cursor: 5,count: 10}
+    # whicn means should return data from index 6
+    articleList(cursor: Int!, count: Int!): [Article!]!
     getArticleByAid(aid: Int!): Article!
     login(account: String, pwd: String): LoginStatus!
   }

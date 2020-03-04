@@ -1,6 +1,6 @@
 import { DataSource } from "apollo-datasource";
 import ArticleList from "../model/Article";
-
+import paginator from "../util/paginator";
 class ArticleListApi<T> extends DataSource {
   // TODO: read the docs to get correct type
   store: ArticleList;
@@ -38,11 +38,15 @@ class ArticleListApi<T> extends DataSource {
     };
   }
 
-  async getAllArticleList() {
+  async getAllArticleList(cursor: number, count: number) {
     // @ts-ignore
     const res = await this.store.findAll();
-    // should be IArticle, but nodemon cannot recongize it
-    return res.map((item: any) => this.reducer(item));
+    const paginatedResults = paginator(cursor, count, res);
+    console.log(paginatedResults);
+    // should be IArticle, but nodemon(ts-node?) cannot recongize it
+    return paginatedResults
+      ? paginatedResults!.map((item: any) => this.reducer(item))
+      : null;
   }
 
   async getArticleByAid(aid: number) {

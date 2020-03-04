@@ -21,6 +21,7 @@
     "apollo-server": "^2.10.1",
     "apollo-server-koa": "^2.10.1",
     "graphql": "^14.6.0",
+    "lodash": "^4.17.15",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.2",
     "sequelize": "^5.21.5",
