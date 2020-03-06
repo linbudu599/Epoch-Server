@@ -2,50 +2,35 @@ import "reflect-metadata";
 import Koa, { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
 // import typeDefs from "../schema";
-import { RecipeResolver } from "../resolver/test";
-import { UserResolver } from "../resolver/user";
-import resolvers from "../resolver";
-import ArticleModel from "../model/Article";
-import ArticleAPI from "../datasources/ArticleAPI";
+import { UserResolver } from "../resolver/userResolver";
+import { ArticleResolver } from "../resolver/articleResolver";
 
-import UserModel from "../model/User";
-import UserAPI from "../datasources/UserAPI";
+// import resolvers from "../temp/index-resolver";
+
+// import ArticleModel from "../model/Article";
+// import ArticleAPI from "../datasources/ArticleAPI";
+
+// import UserModel from "../model/User";
+// import UserAPI from "../datasources/UserAPI";
 
 import { buildSchema } from "type-graphql";
 
 async function initialize() {
   const schema = await buildSchema({
-    resolvers: [UserResolver]
+    resolvers: [UserResolver, ArticleResolver]
   });
   const server = new ApolloServer({
-    context: async ({ req }: Context) => {
-      // ts-node cannot recongize ?. ????
-      // const token = req.headers.authorization || "";
-      // TODO: should get info from token (jwt)
-      // I need to rethink the authorization
-      const account = "linbudu";
-      const pwd = "budubudu";
-      // Apollo will inject data-sources automatically
-      // @ts-ignore
-      // const user = await store.users.findOne({
-      //   where: {
-      //     account,
-      //     pwd
-      //   }
-      // });
-      // console.log(user);
-      // return { user: { ...user.dataValues } };
-    },
+    context: async ({ req }: Context) => {},
     schema,
     // typeDefs,
-    resolvers,
-    dataSources: () => ({
-      // FIXME: fix type error, maybe by .d.ts
-      // @ts-ignore
-      article: new ArticleAPI<any>(ArticleModel),
-      // @ts-ignore
-      users: new UserAPI<any>(UserModel)
-    }),
+    // resolvers,
+    // dataSources: () => ({
+    //   // FIXME: fix type error, maybe by .d.ts
+    //   // @ts-ignore
+    //   article: new ArticleAPI<any>(ArticleModel),
+    //   // @ts-ignore
+    //   users: new UserAPI<any>(UserModel)
+    // }),
     tracing: true
   });
 
