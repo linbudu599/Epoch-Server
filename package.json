@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon ./app/server/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/jest": "^25.1.3",
     "@types/koa": "^2.11.2",
     "@types/koa-router": "^7.4.0",
     "@types/node": "^13.7.7",
@@ -22,6 +23,7 @@
     "apollo-server-koa": "^2.10.1",
     "class-transformer": "^0.2.3",
     "graphql": "^14.6.0",
+    "jest": "^25.1.0",
     "lodash": "^4.17.15",
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.2",
@@ -31,6 +33,11 @@
     "typescript": "^3.8.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-typescript": "^7.8.3",
+    "babel-jest": "^25.1.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "nodemon": "^2.0.2"
   }
 }
