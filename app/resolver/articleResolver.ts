@@ -9,6 +9,18 @@ import {
   Int
 } from "type-graphql";
 import { Repository, getRepository } from "typeorm";
+import {
+  MaxLength,
+  Length,
+  IsIn,
+  IsBoolean,
+  IsString,
+  IsNumber,
+  IsPositive,
+  ValidateIf,
+  IsNotEmpty,
+  Min
+} from "class-validator";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Article, MutationStatus } from "../schema/article";
@@ -18,22 +30,34 @@ import { normalizeCurrent } from "../util/timeParser";
 @InputType()
 export class ArticleInput {
   @Field()
+  @ValidateIf(item => item.aid !== 9999)
+  @IsNumber()
+  @Min(0, { message: "aid should not be less than 0" })
   aid?: number;
 
   @Field({ nullable: true })
+  @MaxLength(30, { message: "type field max length: 30" })
+  @IsIn(["Thoughts", "Life", "Work"])
   type?: string;
 
   @Field({ nullable: true })
+  @MaxLength(30, { message: "tag field max length: 30" })
+  @IsString()
   tag?: string;
 
   @Field()
+  @MaxLength(30, { message: "title field max length: 30" })
+  @IsString()
   title!: string;
 
   // default description is title
   @Field({ nullable: true })
+  @MaxLength(200, { message: "description field max length: 200" })
+  @IsString()
   description?: string;
 
   @Field()
+  @IsString()
   content!: string;
 }
 

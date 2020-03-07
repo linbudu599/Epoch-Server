@@ -7,7 +7,18 @@ import {
   InputType,
   Field
 } from "type-graphql";
-
+import {
+  MaxLength,
+  Length,
+  IsIn,
+  IsBoolean,
+  IsString,
+  IsNumber,
+  IsPositive,
+  ValidateIf,
+  IsNotEmpty,
+  Min
+} from "class-validator";
 import { Repository, getRepository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
@@ -17,9 +28,13 @@ import { User, Status } from "../schema/user";
 
 @InputType()
 export class UserInput {
+  @Length(3, 15, { message: "account length: 3-15" })
+  @IsString()
   @Field()
   account!: string;
 
+  @Length(6, 12, { message: "secret length: 6-12" })
+  @IsString()
   @Field()
   secret!: string;
 }
