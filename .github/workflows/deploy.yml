@@ -1,0 +1,36 @@
+name: Epoch-Server
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Npm Install
+        run: |
+          npm install
+        env:
+          CI: true
+          NODE_ENV: "development"
+
+      - name: Unit Test
+        run: |
+          npm run test
+
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SECRET_KEY }}
+          ARGS: "-avz --delete"
+          SOURCE: "/*"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: /usr/local/demo-collections/Epoch-Server-Temp/
