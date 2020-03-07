@@ -23,6 +23,7 @@
     "apollo-server": "^2.10.1",
     "apollo-server-koa": "^2.10.1",
     "class-transformer": "^0.2.3",
+    "dayjs": "^1.8.21",
     "graphql": "^14.6.0",
     "jest": "^25.1.0",
     "lodash": "^4.17.15",

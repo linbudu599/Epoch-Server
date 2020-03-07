@@ -8,59 +8,18 @@ import {
   Root,
   Int
 } from "type-graphql";
+import { Repository, getRepository } from "typeorm";
+import { InjectRepository } from "typeorm-typedi-extensions";
 
 import { Article, MutationStatus } from "../schema/article";
-
-import { plainToClass } from "class-transformer";
-
-// Mock Before TypeORM
-function createArticleSamples() {
-  return plainToClass(Article, [
-    {
-      aid: 1,
-      type: "Thought",
-      tag: "FE",
-      title: "寒假总结: XXXXX",
-      description: "进行一些总结",
-      content: "寒假结束啦",
-      createdAt: "2020-3-05",
-      updatedAt: "2020-3-10"
-    },
-    {
-      aid: 2,
-      type: "Thought",
-      tag: "FE",
-      title: "寒假总结: XXXXX",
-      description: "进行一些总结",
-      content: "寒假结束啦",
-      createdAt: "2020-3-05",
-      updatedAt: "2020-3-10"
-    },
-    {
-      aid: 3,
-      type: "Thought",
-      tag: "FE",
-      title: "寒假总结: XXXXX",
-      description: "进行一些总结",
-      content: "寒假结束啦",
-      createdAt: "2020-3-05",
-      updatedAt: "2020-3-10"
-    },
-    {
-      aid: 4,
-      type: "Thought",
-      tag: "FE",
-      title: "寒假总结: XXXXX",
-      description: "进行一些总结",
-      content: "寒假结束啦",
-      createdAt: "2020-3-05",
-      updatedAt: "2020-3-10"
-    }
-  ]);
-}
+import { ArticleStatusHandler } from "../util/statusHandler";
+import { normalizeCurrent } from "../util/timeParser";
 
 @InputType()
 export class ArticleInput {
+  @Field()
+  aid?: number;
+
   @Field({ nullable: true })
   type?: string;
 
@@ -79,48 +38,62 @@ export class ArticleInput {
 }
 
 @Resolver(() => Article)
-@Resolver(() => ArticleInput)
 export class ArticleResolver {
-  private readonly items: Article[] = createArticleSamples();
+  constructor(
+    @InjectRepository(Article)
+    private readonly articleRepository: Repository<Article>
+  ) {}
 
   @Query(() => Article, { nullable: true })
   async getArticleByAId(@Arg("aid") aid: number): Promise<Article | undefined> {
-    return await this.items.find(Article => Article.aid === aid);
+    const find = await this.articleRepository.findOne({ where: { aid } });
+
+    return find;
   }
 
   @Query(() => [Article], { nullable: true })
   async getAllArticles(): Promise<Article[]> {
-    return await this.items;
+    return await this.articleRepository.find();
   }
 
   @Mutation(returns => MutationStatus)
   async create(
-    @Arg("info") articleInfo: ArticleInput
+    @Arg("info") { type, title, tag, description, content }: ArticleInput
   ): Promise<MutationStatus> {
-    console.log(articleInfo);
-    return {
-      aid: 9,
-      status: 0,
-      updatedAt: "2020-3-05"
-    };
+    const article = this.articleRepository.create({
+      type,
+      title,
+      tag,
+      description,
+      content,
+      createdAt: normalizeCurrent()
+    });
+
+    await this.articleRepository.save(article);
+    console.log(article);
+    return new ArticleStatusHandler(1, 1, "111");
   }
 
   @Mutation(() => MutationStatus)
   async delete(@Arg("aid") aid: number): Promise<MutationStatus> {
-    return {
-      aid: 9,
-      status: 0
-    };
+    const res = await this.articleRepository.delete(aid);
+    // by affected
+    console.log(res);
+    return new ArticleStatusHandler(1, 1, "111");
   }
 
   @Mutation(returns => MutationStatus)
   async update(
-    @Arg("info") articleInfo: ArticleInput
+    @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
   ): Promise<MutationStatus> {
-    return {
-      aid: 9,
-      status: 0,
-      updatedAt: "2020-3-05"
-    };
+    const article = await this.articleRepository.update(aid!, {
+      title,
+      description,
+      content,
+      type,
+      tag
+    });
+    console.log(article);
+    return new ArticleStatusHandler(1, 1, "111");
   }
 }

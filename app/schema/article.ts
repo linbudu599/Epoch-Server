@@ -1,32 +1,40 @@
 import { Field, ObjectType, Int, InputType } from "type-graphql";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @ObjectType()
+@Entity("Article")
 export class Article {
   @Field(type => Int)
+  @PrimaryGeneratedColumn()
   aid!: number;
 
   @Field()
+  @Column({ default: "Thoughts" })
   type?: string;
 
   @Field()
+  @Column({ default: "Frontend" })
   tag?: string;
 
   @Field()
+  @Column()
   title!: string;
 
-  // default description is title
   @Field()
+  @Column()
   description?: string;
 
   @Field()
+  @Column()
   content!: string;
 
-  // TODO: send dealed time info to client like
   // 2020-3-05
   @Field()
+  @Column({ default: () => "NOW()" })
   createdAt?: string;
 
   @Field()
+  @Column({ default: () => "NOW()" })
   updatedAt?: string;
 }
 

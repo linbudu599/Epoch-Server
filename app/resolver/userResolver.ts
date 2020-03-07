@@ -11,7 +11,7 @@ import {
 import { Repository, getRepository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
-import StatusHandler from "../util/statusHandler";
+import { UserStatusHandler } from "../util/statusHandler";
 
 import { User, Status } from "../schema/user";
 
@@ -40,8 +40,8 @@ export class UserResolver {
     });
 
     return res
-      ? new StatusHandler(0, "token", "success")
-      : new StatusHandler(1, "token", "failure");
+      ? new UserStatusHandler(0, "token", "success")
+      : new UserStatusHandler(1, "token", "failure");
   }
 
   // TODO: FieldResolver?
@@ -62,6 +62,6 @@ export class UserResolver {
     // TODO: deal: unique name & validator
     console.log(res);
 
-    return new StatusHandler(1, "token", "suuccess");
+    return new UserStatusHandler(1, "token", "suuccess");
   }
 }

@@ -1,19 +1,12 @@
 import "reflect-metadata";
 import Koa, { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
-// import typeDefs from "../schema";
 import { UserResolver } from "../resolver/userResolver";
 import { ArticleResolver } from "../resolver/articleResolver";
 import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 import { User } from "../schema/user";
-// import resolvers from "../temp/index-resolver";
-
-// import ArticleModel from "../model/Article";
-// import ArticleAPI from "../datasources/ArticleAPI";
-
-// import UserModel from "../model/User";
-// import UserAPI from "../datasources/UserAPI";
+import { Article } from "../schema/article";
 
 import { buildSchema } from "type-graphql";
 
@@ -26,11 +19,11 @@ async function initialize() {
     password: "111",
     port: 3306,
     host: "localhost",
-    entities: [User],
-    synchronize: true,
+    entities: [User, Article],
+    // synchronize: true,
     logger: "advanced-console",
     logging: "all",
-    dropSchema: true,
+    // dropSchema: true,
     cache: true
   });
 
@@ -41,15 +34,6 @@ async function initialize() {
   const server = new ApolloServer({
     context: async ({ req }: Context) => {},
     schema,
-    // typeDefs,
-    // resolvers,
-    // dataSources: () => ({
-    //   // FIXME: fix type error, maybe by .d.ts
-    //   // @ts-ignore
-    //   article: new ArticleAPI<any>(ArticleModel),
-    //   // @ts-ignore
-    //   users: new UserAPI<any>(UserModel)
-    // }),
     tracing: true
   });
 
