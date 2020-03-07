@@ -15,4 +15,6 @@ mock 用 API 接口，基于 Apollo-Server。
 
 - 校验器使用`class-validator`
 
-- TypeORM 的结合待实践(今天搞这个搞瑞了)
+- TypeORM 已结合
+
+- 大致功能已经完成咯 开始折腾后台管理系统 博客前台可能暂缓
