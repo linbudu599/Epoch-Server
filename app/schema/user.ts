@@ -1,20 +1,26 @@
 import { Field, ObjectType, Int, InputType } from "type-graphql";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 // String is not offered
 
 @ObjectType()
+@Entity("User")
 export class User {
   @Field(type => Int)
+  @PrimaryGeneratedColumn()
   uid!: number;
 
   @Field()
+  @Column({ unique: true })
   account!: string;
 
   @Field()
-  secret!: string;
+  @Column()
+  secret?: string;
 
-  @Field(type => Int)
-  authority!: number;
+  @Field(type => Int, { nullable: true })
+  @Column({ nullable: true, default: 10 })
+  auth?: number;
 }
 
 @ObjectType()
@@ -24,7 +30,7 @@ export class Status {
   code!: number;
 
   @Field()
-  token!: string;
+  token?: string;
 
   @Field()
   message?: string;

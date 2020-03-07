@@ -1,69 +1,67 @@
-import { Resolver, Query, Arg, Mutation } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Arg,
+  Mutation,
+  FieldResolver,
+  InputType,
+  Field
+} from "type-graphql";
+
+import { Repository, getRepository } from "typeorm";
+import { InjectRepository } from "typeorm-typedi-extensions";
+
+import StatusHandler from "../util/statusHandler";
 
 import { User, Status } from "../schema/user";
 
-import { plainToClass } from "class-transformer";
+@InputType()
+export class UserInput {
+  @Field()
+  account!: string;
 
-// Mock Before TypeORM
-function createUserSamples() {
-  return plainToClass(User, [
-    {
-      uid: 1,
-      account: "linbudu",
-      secret: "budubudu",
-      auth: 10
-    },
-
-    {
-      uid: 2,
-      account: "linbudu",
-      secret: "budubudu",
-      auth: 10
-    },
-
-    {
-      uid: 3,
-      account: "linbudu",
-      secret: "budubudu",
-      auth: 10
-    }
-  ]);
+  @Field()
+  secret!: string;
 }
 
-@Resolver(() => User)
+@Resolver(of => User)
 export class UserResolver {
-  private readonly items: User[] = createUserSamples();
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+  ) {}
 
-  @Query(() => User, { nullable: true })
-  async User(
+  @Query(returns => Status, { nullable: true })
+  async Login(
     @Arg("account") account: string,
     @Arg("secret") secret: string
-  ): Promise<User | undefined> {
-    return await this.items.find(
-      User => User.account === account && User.secret === secret
-    );
+  ): Promise<Status> {
+    const res = await this.userRepository.findOne({
+      where: { account, secret }
+    });
+
+    return res
+      ? new StatusHandler(0, "token", "success")
+      : new StatusHandler(1, "token", "failure");
   }
 
-  @Query(() => Status, { nullable: true })
-  async Login(): Promise<Status> {
-    return {
-      code: 1,
-      token: "token",
-      message: "Success"
-    };
-  }
-
+  // TODO: FieldResolver?
   @Query(() => [User])
   async Users(): Promise<User[]> {
-    return await this.items;
+    return await this.userRepository.find();
   }
 
-  @Mutation(() => [User])
-  async Register(): Promise<Status> {
-    return {
-      code: 1,
-      token: "token",
-      message: "Success"
-    };
+  @Mutation(() => Status)
+  async Register(@Arg("user") { account, secret }: UserInput): Promise<Status> {
+    const newUser = this.userRepository.create({
+      account,
+      secret
+    });
+
+    const res = await this.userRepository.save(newUser);
+
+    // TODO: deal: unique name & validator
+    console.log(res);
+
+    return new StatusHandler(1, "token", "suuccess");
   }
 }
