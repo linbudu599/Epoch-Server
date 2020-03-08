@@ -3,6 +3,8 @@ import { Length, IsString } from "class-validator";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
+import checkIfExist from "../util/checkIfExist";
+
 import { UserStatusHandler } from "../util/statusHandler";
 
 import { User, Status } from "../schema/user";
@@ -31,15 +33,17 @@ export class UserResolver {
     @Arg("account") account: string,
     @Arg("secret") secret: string
   ): Promise<Status> {
-    const res = await this.userRepository.findOne({
-      where: { account, secret }
-    });
-
-    return res
-      ? new UserStatusHandler(0, "token", "success")
-      : new UserStatusHandler(1, "token", "failure");
+    try {
+      await this.userRepository.findOne({
+        where: { account, secret }
+      });
+      return new UserStatusHandler(10000, "token", "success");
+    } catch (err) {
+      return new UserStatusHandler(10001, "x", "failure");
+    }
   }
 
+  // Just for test
   @Query(() => [User])
   async Users(): Promise<User[]> {
     return await this.userRepository.find();
@@ -47,9 +51,7 @@ export class UserResolver {
 
   @Mutation(() => Status)
   async Register(@Arg("user") { account, secret }: UserInput): Promise<Status> {
-    const isExisted = await this.userRepository.find({
-      where: { account }
-    });
+    const isExisted = await checkIfExist(this.userRepository, { account });
 
     if (isExisted) {
       return new UserStatusHandler(10002, "x", "Account Existed");
@@ -70,17 +72,17 @@ export class UserResolver {
 
   @Mutation(() => Status)
   async Destory(@Arg("user") { account, secret }: UserInput): Promise<Status> {
-    const accountInfo = await this.userRepository.find({
-      where: { account, secret }
+    const accountInfo = await checkIfExist(this.userRepository, {
+      account,
+      secret
     });
-
-    if (accountInfo) {
+    if (!accountInfo) {
       return new UserStatusHandler(10003, "x", "Account Dosen't Exist");
     }
 
     try {
-      await this.userRepository.delete(accountInfo);
-      return new UserStatusHandler(1, "token", "suuccess");
+      await this.userRepository.delete({ account, secret });
+      return new UserStatusHandler(10000, "", "destory account suuccess");
     } catch (err) {
       return new UserStatusHandler(10010, "error", err);
     }

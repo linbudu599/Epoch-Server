@@ -104,7 +104,7 @@ export class ArticleResolver {
   async update(
     @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
   ): Promise<MutationStatus> {
-    try{
+    try {
       const article = await this.articleRepository.update(aid!, {
         title,
         description,
@@ -114,9 +114,8 @@ export class ArticleResolver {
       });
       console.log(article);
       return new ArticleStatusHandler(aid!, 20000, "Update Success");
-    }catch(err){
+    } catch (err) {
       return new ArticleStatusHandler(aid!, 20010, "");
-
     }
   }
 }
