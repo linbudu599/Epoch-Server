@@ -1,24 +1,11 @@
-import {
-  Resolver,
-  Query,
-  Arg,
-  Mutation,
-  InputType,
-  Field,
-  Root,
-  Int
-} from "type-graphql";
-import { Repository, getRepository } from "typeorm";
+import { Resolver, Query, Arg, Mutation, InputType, Field } from "type-graphql";
+import { Repository } from "typeorm";
 import {
   MaxLength,
-  Length,
   IsIn,
-  IsBoolean,
   IsString,
   IsNumber,
-  IsPositive,
   ValidateIf,
-  IsNotEmpty,
   Min
 } from "class-validator";
 import { InjectRepository } from "typeorm-typedi-extensions";
@@ -80,7 +67,7 @@ export class ArticleResolver {
     return await this.articleRepository.find();
   }
 
-  @Mutation(returns => MutationStatus)
+  @Mutation(() => MutationStatus)
   async create(
     @Arg("info") { type, title, tag, description, content }: ArticleInput
   ): Promise<MutationStatus> {
@@ -93,31 +80,43 @@ export class ArticleResolver {
       createdAt: normalizeCurrent()
     });
 
-    await this.articleRepository.save(article);
-    console.log(article);
-    return new ArticleStatusHandler(1, 1, "111");
+    try {
+      const res = await this.articleRepository.save(article);
+      return new ArticleStatusHandler(res.aid, 20000, "Mutation Success");
+    } catch (err) {
+      return new ArticleStatusHandler(9999, 20001, "Mutation Failure");
+    }
   }
 
   @Mutation(() => MutationStatus)
   async delete(@Arg("aid") aid: number): Promise<MutationStatus> {
-    const res = await this.articleRepository.delete(aid);
-    // by affected
-    console.log(res);
-    return new ArticleStatusHandler(1, 1, "111");
+    try {
+      const res = await this.articleRepository.delete(aid);
+      // by affected
+      console.log(res);
+      return new ArticleStatusHandler(10000, 20000, "Delete Success");
+    } catch (err) {
+      return new ArticleStatusHandler(9999, 20001, "Delete Failure");
+    }
   }
 
-  @Mutation(returns => MutationStatus)
+  @Mutation(() => MutationStatus)
   async update(
     @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
   ): Promise<MutationStatus> {
-    const article = await this.articleRepository.update(aid!, {
-      title,
-      description,
-      content,
-      type,
-      tag
-    });
-    console.log(article);
-    return new ArticleStatusHandler(1, 1, "111");
+    try{
+      const article = await this.articleRepository.update(aid!, {
+        title,
+        description,
+        content,
+        type,
+        tag
+      });
+      console.log(article);
+      return new ArticleStatusHandler(aid!, 20000, "Update Success");
+    }catch(err){
+      return new ArticleStatusHandler(aid!, 20010, "");
+
+    }
   }
 }
