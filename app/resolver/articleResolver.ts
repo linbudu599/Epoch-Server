@@ -9,7 +9,7 @@ import {
   Min
 } from "class-validator";
 import { InjectRepository } from "typeorm-typedi-extensions";
-
+import checkIfExist from "../util/checkIfExist";
 import { Article, MutationStatus } from "../schema/article";
 import { ArticleStatusHandler } from "../util/statusHandler";
 import { normalizeCurrent } from "../util/timeParser";
@@ -57,9 +57,9 @@ export class ArticleResolver {
 
   @Query(() => Article, { nullable: true })
   async getArticleByAId(@Arg("aid") aid: number): Promise<Article | undefined> {
-    const find = await this.articleRepository.findOne({ where: { aid } });
+    const res = await this.articleRepository.findOne({ where: { aid } });
 
-    return find;
+    return res;
   }
 
   @Query(() => [Article], { nullable: true })
@@ -104,15 +104,20 @@ export class ArticleResolver {
   async update(
     @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
   ): Promise<MutationStatus> {
+    const res = await checkIfExist(this.articleRepository, { aid });
+
+    if (!res) {
+      return new ArticleStatusHandler(aid!, 20001, "Article Doesn't Exist'");
+    }
+
     try {
-      const article = await this.articleRepository.update(aid!, {
+      await this.articleRepository.update(aid!, {
         title,
         description,
         content,
         type,
         tag
       });
-      console.log(article);
       return new ArticleStatusHandler(aid!, 20000, "Update Success");
     } catch (err) {
       return new ArticleStatusHandler(aid!, 20010, "");
