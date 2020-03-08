@@ -1,6 +1,6 @@
 import { DataSource } from "apollo-datasource";
-import ArticleList from "../model/Article";
-import paginator from "../util/paginator";
+import ArticleList from "../../model/Article";
+import paginator from "../../util/paginator";
 class ArticleListApi<T> extends DataSource {
   // TODO: read the docs to get correct type
   store: ArticleList;

@@ -1,5 +1,5 @@
 import { DataSource } from "apollo-datasource";
-import User from "../model/User";
+import User from "../../model/User";
 
 class UserAPI<T> extends DataSource {
   store: User;
