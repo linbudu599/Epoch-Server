@@ -13,7 +13,7 @@ async function start() {
   // koa-mount works as well
   server.applyMiddleware({ app });
 
-  app.listen({ port: process.env.PORT }, () =>
+  app.listen({ port: 4015 }, () =>
     console.log(
       chalk.green(
         `🍀Server ready at http://localhost:${process.env.PORT}/graphql`

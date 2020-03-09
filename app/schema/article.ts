@@ -1,4 +1,4 @@
-import { Field, ObjectType, Int, InputType } from "type-graphql";
+import { Field, ObjectType, Int } from "type-graphql";
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @ObjectType()
@@ -6,7 +6,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 export class Article {
   @Field(type => Int)
   @PrimaryGeneratedColumn()
-  aid!: number;
+  aid?: number;
 
   @Field()
   @Column({ default: "Thoughts" })
@@ -30,11 +30,11 @@ export class Article {
 
   // 2020-3-05
   @Field()
-  @Column({ default: () => "NOW()" })
+  @Column({ default: () => null })
   createdAt?: string;
 
   @Field()
-  @Column({ default: () => "NOW()" })
+  @Column({ default: () => null })
   updatedAt?: string;
 }
 

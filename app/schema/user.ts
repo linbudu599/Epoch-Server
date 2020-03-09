@@ -21,12 +21,16 @@ export class User {
   @Field(type => Int, { nullable: true })
   @Column({ nullable: true, default: 10 })
   auth?: number;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true, default: "" })
+  ownedArticles?: string;
 }
 
+// TODO: simplified by interface & union
 @ObjectType()
 export class Status {
   @Field(type => Int)
-  // 0:success 1:failure
   code!: number;
 
   @Field()

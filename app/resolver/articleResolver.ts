@@ -82,7 +82,7 @@ export class ArticleResolver {
 
     try {
       const res = await this.articleRepository.save(article);
-      return new ArticleStatusHandler(res.aid, 20000, "Mutation Success");
+      return new ArticleStatusHandler(res.aid!, 20000, "Mutation Success");
     } catch (err) {
       return new ArticleStatusHandler(9999, 20001, "Mutation Failure");
     }
