@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import { Context } from "koa";
 import { ApolloServer } from "apollo-server-koa";
 import { UserResolver } from "../resolver/userResolver";
 import { MainResolver } from "../resolver/mainResolver";
@@ -8,7 +7,9 @@ import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 import { User } from "../schema/user";
 import { Article } from "../schema/article";
+import { Config } from "../schema/config";
 import { buildSchema } from "type-graphql";
+
 TypeORM.useContainer(Container);
 
 async function initialize() {
@@ -20,7 +21,7 @@ async function initialize() {
     port: 3306,
     host: "localhost",
     entities: [User, Article],
-    // synchronize: true,
+    synchronize: true,
     logger: "advanced-console",
     logging: "all",
     // dropSchema: true,

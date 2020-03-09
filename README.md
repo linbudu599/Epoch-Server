@@ -1,6 +1,6 @@
 # GraphQL-API
 
-mock 用 API 接口，基于 Apollo-Server。
+Epoch API Server, built by `GraphQL` & `Apollo-Server-Koa`.
 
 ## 构思
 

@@ -33,14 +33,14 @@ export class UserResolver {
     @Arg("account") account: string,
     @Arg("secret") secret: string
   ): Promise<Status> {
-    try {
-      await this.userRepository.findOne({
-        where: { account, secret }
-      });
-      return new UserStatusHandler(10000, "token", "success");
-    } catch (err) {
-      return new UserStatusHandler(10001, "x", "failure");
-    }
+    const isExisted = await checkIfExist(this.userRepository, {
+      account,
+      secret
+    });
+
+    return isExisted
+      ? new UserStatusHandler(10000, "token", "success")
+      : new UserStatusHandler(10001, "x", "failure");
   }
 
   // Just for test
