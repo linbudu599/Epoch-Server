@@ -13,10 +13,10 @@ async function checkIfExist<T>(
   repo: Repository<T>,
   findBy: any,
   returnRes: boolean = false
-): Promise<boolean | T[]> {
+): Promise<boolean | T> {
   const res = await repo.find({ where: findBy });
-  // return res.length > 0 ? (returnRes ? res[0] : true) : false;
-  return res.length > 0;
+  console.log(res);
+  return res.length > 0 ? (returnRes ? res[0] : true) : false;
 }
 
 export default checkIfExist;

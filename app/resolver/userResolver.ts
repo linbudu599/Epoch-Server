@@ -7,6 +7,8 @@ import checkIfExist from "../util/checkIfExist";
 
 import { UserStatusHandler } from "../util/statusHandler";
 
+import { tokenGenerator, tokenVerifier } from "../util/token";
+
 import { User, Status } from "../schema/user";
 
 @InputType()
@@ -33,14 +35,23 @@ export class UserResolver {
     @Arg("account") account: string,
     @Arg("secret") secret: string
   ): Promise<Status> {
-    const isExisted = await checkIfExist(this.userRepository, {
-      account,
-      secret
-    });
+    // check if account exists
+    const isExisted = await checkIfExist(
+      this.userRepository,
+      {
+        account,
+        secret
+      },
+      true
+    );
 
     return isExisted
-      ? new UserStatusHandler(10000, "token", "success")
-      : new UserStatusHandler(10001, "x", "failure");
+      ? new UserStatusHandler(
+          10000,
+          tokenGenerator((isExisted as User).uid, account),
+          "success"
+        )
+      : new UserStatusHandler(10001, "Invalid Login Request Params", "failure");
   }
 
   // Just for test
@@ -67,8 +78,12 @@ export class UserResolver {
     });
 
     try {
-      await this.userRepository.save(newUser);
-      return new UserStatusHandler(10000, "token", "suuccess");
+      const res = await this.userRepository.save(newUser);
+      return new UserStatusHandler(
+        10000,
+        tokenGenerator(res.uid, account),
+        "suuccess"
+      );
     } catch (err) {
       return new UserStatusHandler(10010, "error", err);
     }

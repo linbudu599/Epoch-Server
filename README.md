@@ -19,10 +19,11 @@ Not Available Now, this server is not yet developed.
 - [x] Config API
 - [x] Validator(by `class-validator`)
 - [ ] Typing Support
-- [ ] Prettier Boundary Status or Uncaught Error Handler
+- [ ] (Prettier Boundary Status / Uncaught Error) Handler
 - [ ] Collect Fields By InputObjectType
-    > need enable `Apollo-Client` to support it as well
+  > need enable `Apollo-Client` to support it as well
 - [ ] Authorization(JWT)
+- [ ] Refractor By Union & Inline Fragment
 
 ## Next Stage
 
