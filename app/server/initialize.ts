@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ApolloServer } from "apollo-server-koa";
+import { ApolloServer, gql } from "apollo-server-koa";
 import { UserResolver } from "../resolver/userResolver";
 import { MainResolver } from "../resolver/mainResolver";
 import { ArticleResolver } from "../resolver/articleResolver";
@@ -21,27 +21,37 @@ async function initialize() {
     port: 3306,
     host: "localhost",
     entities: [User, Article],
-    synchronize: true,
+    // synchronize: true,
     logger: "advanced-console",
     logging: "all",
     // dropSchema: true,
     cache: true
   });
 
+  // Construct a schema, using GraphQL schema language
+  const typeDefs = gql`
+    type Query {
+      hello: String
+    }
+  `;
+
+  // Provide resolver functions for your schema fields
+  const resolvers = {
+    Query: {
+      hello: () => "Hello world!"
+    }
+  };
+
   const schema = await buildSchema({
     resolvers: [UserResolver, ArticleResolver, MainResolver],
     container: Container
   });
   const server = new ApolloServer({
-    // context: ({ req }: Context) => {
-    //   const context = {
-    //     req,
-    //     auth: req.headers.authorization
-    //   };
-    //   return context;
-    // },
     schema,
-    tracing: true
+    tracing: true,
+    typeDefs,
+    resolvers,
+    engine: true
   });
 
   return server;
