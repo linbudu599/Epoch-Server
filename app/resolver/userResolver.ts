@@ -50,7 +50,11 @@ export class UserResolver {
   }
 
   @Mutation(() => Status)
-  async Register(@Arg("user") { account, secret }: UserInput): Promise<Status> {
+  // @Arg("user") { account, secret }: UserInput
+  async Register(
+    @Arg("account") account: string,
+    @Arg("secret") secret: string
+  ): Promise<Status> {
     const isExisted = await checkIfExist(this.userRepository, { account });
 
     if (isExisted) {
@@ -71,7 +75,10 @@ export class UserResolver {
   }
 
   @Mutation(() => Status)
-  async Destory(@Arg("user") { account, secret }: UserInput): Promise<Status> {
+  async Destory(
+    @Arg("account") account: string,
+    @Arg("secret") secret: string
+  ): Promise<Status> {
     const accountInfo = await checkIfExist(this.userRepository, {
       account,
       secret

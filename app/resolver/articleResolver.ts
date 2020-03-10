@@ -69,7 +69,12 @@ export class ArticleResolver {
 
   @Mutation(() => MutationStatus)
   async create(
-    @Arg("info") { type, title, tag, description, content }: ArticleInput
+    // @Arg("info") { type, title, tag, description, content }: ArticleInput
+    @Arg("type") type: string,
+    @Arg("title") title: string,
+    @Arg("tag") tag: string,
+    @Arg("description") description: string,
+    @Arg("content") content: string
   ): Promise<MutationStatus> {
     const article = this.articleRepository.create({
       type,
@@ -102,7 +107,13 @@ export class ArticleResolver {
 
   @Mutation(() => MutationStatus)
   async update(
-    @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
+    // @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
+    @Arg("aid") aid: number,
+    @Arg("type") type: string,
+    @Arg("title") title: string,
+    @Arg("tag") tag: string,
+    @Arg("description") description: string,
+    @Arg("content") content: string
   ): Promise<MutationStatus> {
     const res = await checkIfExist(this.articleRepository, { aid });
 

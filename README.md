@@ -20,7 +20,9 @@ Not Available Now, this server is not yet developed.
 - [x] Validator(by `class-validator`)
 - [ ] Typing Support
 - [ ] Prettier Boundary Status or Uncaught Error Handler
-- [ ] Authorization
+- [ ] Collect Fields By InputObjectType
+    > need enable `Apollo-Client` to support it as well
+- [ ] Authorization(JWT)
 
 ## Next Stage
 
