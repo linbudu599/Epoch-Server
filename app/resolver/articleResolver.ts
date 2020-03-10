@@ -56,33 +56,37 @@ export class ArticleResolver {
   ) {}
 
   @Query(() => Article, { nullable: true })
-  async getArticleByAId(@Arg("aid") aid: number): Promise<Article | undefined> {
+  async FetchArticleByAId(
+    @Arg("aid") aid: number
+  ): Promise<Article | undefined> {
     const res = await this.articleRepository.findOne({ where: { aid } });
 
     return res;
   }
 
   @Query(() => [Article], { nullable: true })
-  async getAllArticles(): Promise<Article[]> {
+  async FetchAllArticles(): Promise<Article[]> {
     return await this.articleRepository.find();
   }
 
   @Mutation(() => MutationStatus)
-  async create(
+  async CreateArticle(
     // @Arg("info") { type, title, tag, description, content }: ArticleInput
     @Arg("type") type: string,
-    @Arg("title") title: string,
     @Arg("tag") tag: string,
+    @Arg("title") title: string,
     @Arg("description") description: string,
     @Arg("content") content: string
   ): Promise<MutationStatus> {
+    console.log(title);
     const article = this.articleRepository.create({
       type,
       title,
       tag,
       description,
       content,
-      createdAt: normalizeCurrent()
+      createdAt: normalizeCurrent(),
+      updatedAt: normalizeCurrent()
     });
 
     try {
@@ -94,7 +98,7 @@ export class ArticleResolver {
   }
 
   @Mutation(() => MutationStatus)
-  async delete(@Arg("aid") aid: number): Promise<MutationStatus> {
+  async DeleteArticle(@Arg("aid") aid: number): Promise<MutationStatus> {
     try {
       const res = await this.articleRepository.delete(aid);
       // by affected
@@ -106,7 +110,7 @@ export class ArticleResolver {
   }
 
   @Mutation(() => MutationStatus)
-  async update(
+  async UpdateArticle(
     // @Arg("info") { aid, title, description, content, type, tag }: ArticleInput
     @Arg("aid") aid: number,
     @Arg("type") type: string,

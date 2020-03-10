@@ -14,7 +14,7 @@ export class MainResolver {
   ) {}
 
   @Query(() => [Article], { nullable: true })
-  async getAllArticlesById(@Arg("uid") uid: number): Promise<any> {
+  async FetchOwnedArticlesByUid(@Arg("uid") uid: number): Promise<any> {
     // 还要做一个不存在的报错
     // 放在context里做吧
     const userInfo = await this.userRepository.findOne({
