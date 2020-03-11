@@ -34,3 +34,15 @@ export class ConfigInput {
   @Column()
   avatar?: string;
 }
+
+@ObjectType()
+export class ConfigMutationStatus {
+  @Field()
+  code!: number;
+
+  @Field()
+  status!: string;
+
+  @Field()
+  config!: object;
+}

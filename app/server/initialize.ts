@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ApolloServer, gql } from "apollo-server-koa";
+import { ApolloServer } from "apollo-server-koa";
 import { UserResolver } from "../resolver/userResolver";
 import { MainResolver } from "../resolver/mainResolver";
 import { ArticleResolver } from "../resolver/articleResolver";
@@ -9,6 +9,8 @@ import { User } from "../schema/user";
 import { Article } from "../schema/article";
 import { Config } from "../schema/config";
 import { buildSchema } from "type-graphql";
+
+import { customAuthChecker } from "./authChecker";
 
 TypeORM.useContainer(Container);
 
@@ -28,29 +30,20 @@ async function initialize() {
     cache: true
   });
 
-  // Construct a schema, using GraphQL schema language
-  const typeDefs = gql`
-    type Query {
-      hello: String
-    }
-  `;
-
-  // Provide resolver functions for your schema fields
-  const resolvers = {
-    Query: {
-      hello: () => "Hello world!"
-    }
-  };
-
   const schema = await buildSchema({
     resolvers: [UserResolver, ArticleResolver, MainResolver],
-    container: Container
+    container: Container,
+    authChecker: customAuthChecker
   });
   const server = new ApolloServer({
     schema,
+    context: async ({ req }) => {
+      const context = {
+        req
+      };
+      return context;
+    },
     tracing: true,
-    typeDefs,
-    resolvers,
     engine: true
   });
 

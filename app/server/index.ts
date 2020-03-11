@@ -8,14 +8,18 @@ import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 const dev = process.env.NODE_ENV === "development";
 
+import jwt from "koa-jwt";
+
 TypeORM.useContainer(Container);
 
 dotenv.config({ path: dev ? ".env.dev" : ".env.prod" });
 
 async function start() {
   const server = await initialize();
+
   const app = new Koa();
   app.use(CrossOrigin);
+  // app.use(jwt({ secret: process.env.SECRET_KEY! }));
   // koa-mount works as well
   server.applyMiddleware({ app });
 

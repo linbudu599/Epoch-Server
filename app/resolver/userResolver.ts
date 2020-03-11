@@ -1,4 +1,12 @@
-import { Resolver, Query, Arg, Mutation, InputType, Field } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Arg,
+  Mutation,
+  InputType,
+  Field,
+  Authorized
+} from "type-graphql";
 import { Length, IsString } from "class-validator";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
@@ -30,7 +38,7 @@ export class UserResolver {
     @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {}
 
-  @Query(() => Status, { nullable: true })
+  @Mutation(() => Status, { nullable: true })
   async Login(
     @Arg("account") account: string,
     @Arg("secret") secret: string
@@ -55,6 +63,7 @@ export class UserResolver {
   }
 
   // Just for test
+  @Authorized()
   @Query(() => [User])
   async Users(): Promise<User[]> {
     return await this.userRepository.find();

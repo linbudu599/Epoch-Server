@@ -2,7 +2,8 @@ import { Resolver, Query, Arg, Mutation } from "type-graphql";
 import { Repository } from "typeorm";
 import { InjectRepository } from "typeorm-typedi-extensions";
 
-import { Config, ConfigInput } from "../schema/config";
+import { ConfigStatusHandler } from "../util/statusHandler";
+import { Config, ConfigInput, ConfigMutationStatus } from "../schema/config";
 
 @Resolver(() => Config)
 export class MainResolver {
@@ -12,21 +13,24 @@ export class MainResolver {
   ) {}
 
   @Query(() => Config, { nullable: true })
-  async getConfigs(): Promise<Config> {
+  async getConfigs(@Arg("uid") uid: number): Promise<Config> {
+    // TODO: find customize config by uid
     const configs = await this.configRepository.findOne();
 
     return configs!;
   }
 
-  @Mutation(() => Config, { nullable: true })
-  async mutateConfig(
-    @Arg("config") { bgImg, avatar }: ConfigInput
-  ): Promise<Config> {
+  // optional config key name
+  @Mutation(() => ConfigMutationStatus)
+  async changeConfig(
+    @Arg("uid") uid: number,
+    @Arg("bgImd") bgImg: string,
+    @Arg("avatar") avatar: string
+  ): Promise<ConfigStatusHandler> {
     const configs = await this.configRepository.update(1, {
       bgImg,
       avatar
     });
-
-    return await this.configRepository.findOne() as Config;
+    return new ConfigStatusHandler(1, "success", []);
   }
 }

@@ -31,3 +31,14 @@ export class ArticleStatusHandler {
     this.updatedAt = updatedAt;
   }
 }
+
+export class ConfigStatusHandler {
+  code: number;
+  status: string;
+  config: object;
+  constructor(code: number, status: string, config: object) {
+    this.code = code;
+    this.status = status;
+    this.config = config;
+  }
+}
