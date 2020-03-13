@@ -8,13 +8,11 @@ It's only avaliable by using preset account for now, in the next stage you can c
 
 By the way, You can check the api [here](http://47.97.183.158:4000/graphql), and read docs with it like this:
 
-(you can also set the playground style as you wish like `dark mode`)
+(you can also set the playground style as you wish, like `dark mode`)
 
 ![img](preview/playground.png),
 
 ## Preset Account
-
-Not Available Now, this server is not yet developed.
 
 ## Status
 

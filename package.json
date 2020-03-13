@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest",
     "dev": "cross-env NODE_ENV=development && nodemon ./app/server/index.ts",
-    "start": "cross-env NODE_ENV=production && pm2 start ./app/server/index.ts --name 'Epoch-Server'"
+    "transform":"tsc",
+    "serve": "npm run transform && cross-env NODE_ENV=production && pm2 start ./app/server/index.js --name 'Epoch-Server'"
   },
   "keywords": [],
   "author": "",

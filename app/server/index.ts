@@ -8,8 +8,6 @@ import { Container } from "typedi";
 import * as TypeORM from "typeorm";
 const dev = process.env.NODE_ENV === "development";
 
-import jwt from "koa-jwt";
-
 TypeORM.useContainer(Container);
 
 dotenv.config({ path: dev ? ".env.dev" : ".env.prod" });
@@ -28,9 +26,6 @@ async function start() {
       chalk.green(`🍀Server ready at http://localhost:${4000}/graphql`)
     )
   );
-  // app.listen({ port: 4000 }, () =>
-  //   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-  // );
 }
 
 start();
