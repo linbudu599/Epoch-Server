@@ -24,7 +24,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-server": "^2.10.1",
     "apollo-server-koa": "^2.10.1",
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.2",
     "class-validator": "^0.11.0",
     "cross-env": "^7.0.2",
     "dayjs": "^1.8.21",
